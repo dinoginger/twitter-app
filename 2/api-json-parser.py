@@ -16,14 +16,14 @@ def menu(data, depth, object):
         try:
             print(f"!!!CURENT DEPTH : {depth}!!!\n!!!CURRENT OBJECT: {object}!!!")
             print("\nWhat's next?\n"
-                  "\t1. Show me a list of all keys in JSON!\n"
+                  "\t1. Show me a list of all keys in this object!!\n"
                   "\t2. Recieve data by given key.\n"
-                  "\t3. Exit\n"
+                  "\t3. Exit level\n"
                   "Your choice: ")
             choice = int(input())
             if choice == 1:
                 print("\nHere is the list of all keys in this JSON object.")
-                display_all_keys(data)
+                display_items(data)
             elif choice == 2:
                 get_info(data, depth, object)
             elif choice == 3:
@@ -40,7 +40,7 @@ def menu(data, depth, object):
             print("It's either 1, 2 or 3 :(")
 
 
-def display_all_keys(data):
+def display_items(data):
     if type(data) == dict:
         for key in data.keys():
             print(f"\t • {key}")
@@ -62,7 +62,7 @@ def get_info(data, depth, object):
         if len(data[key]) == 0:
             print("\t",data[key])
 
-        display_all_keys(data[key])
+        display_items(data[key])
         print("")
 
     elif type(data[key]) == dict:
@@ -76,7 +76,7 @@ def get_info(data, depth, object):
             return
 
         if choice == 1:
-            display_all_keys(data[key])
+            display_items(data[key])
             menu(data[key], depth+1, key)
 
         elif choice == 2:
@@ -109,7 +109,7 @@ def main():
             choice = int(input())
             if choice == 1:
                 print("\nHere is the list of all keys in this JSON object.")
-                display_all_keys(data)
+                display_items(data)
             elif choice == 2:
                 get_info(data, depth, "main")
             elif choice == 3:
