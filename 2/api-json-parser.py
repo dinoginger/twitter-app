@@ -18,7 +18,7 @@ def menu(data, depth, object):
             print("\nWhat's next?\n"
                   "\t1. Show me a list of all keys in this object!!\n"
                   "\t2. Recieve data by given key.\n"
-                  "\t3. Exit level\n"
+                  f"\t3. Exit level {depth}\n"
                   "Your choice: ")
             choice = int(input())
             if choice == 1:
@@ -53,41 +53,42 @@ def get_info(data, depth, object):
     print(f"\tCURRENT DEPTH {depth}\nCURRENT OBJECT: {object}\nOkay, input the key you want to get value of:\n")
     try:
         key = input()
+
+
+        if type(data[key]) == list:
+            print("Value is a list.")
+            if len(data[key]) == 0:
+                print("\t",data[key])
+
+            display_items(data[key])
+            print("")
+
+        elif type(data[key]) == dict:
+            print("Value is an object.\nDo you want to see the list of its keys?\n"
+                  "\t1. Yes\n"
+                  "\t2. No\nYour choice:")
+            try:
+                choice = int(input())
+            except ValueError:
+                print("Wrong choice. Returning to menu...")
+                return
+
+            if choice == 1:
+                display_items(data[key])
+                menu(data[key], depth+1, key)
+
+            elif choice == 2:
+                print("Returning to menu....")
+                return
+            else:
+                print("Wrong choice. Returning to menu...")
+                return
+        else:
+            print(f"Value by key \"{key}\":")
+            print(f"\t{data[key]}")
     except KeyError:
         print("Wrong key entered.")
         return
-
-    if type(data[key]) == list:
-        print("Value is a list.")
-        if len(data[key]) == 0:
-            print("\t",data[key])
-
-        display_items(data[key])
-        print("")
-
-    elif type(data[key]) == dict:
-        print("Value is an object.\nDo you want to see the list of its keys?\n"
-              "\t1. Yes\n"
-              "\t2. No\nYour choice:")
-        try:
-            choice = int(input())
-        except ValueError:
-            print("Wrong choice. Returning to menu...")
-            return
-
-        if choice == 1:
-            display_items(data[key])
-            menu(data[key], depth+1, key)
-
-        elif choice == 2:
-            print("Returning to menu....")
-            return
-        else:
-            print("Wrong choice. Returning to menu...")
-            return
-    else:
-        print(f"Value by key \"{key}\":")
-        print(f"\t{data[key]}")
 
 
 def main():
