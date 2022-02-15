@@ -9,7 +9,17 @@ import json
 from time import sleep
 
 
-def menu(data, depth, obj):
+def menu(data: dict, depth: int, obj: str):
+    """
+    Menu function which can be used on different levels.
+
+    :param data: json object in format of dict which is passed by previous level.
+    :param depth: level velue
+    :param obj: name of object we are working on.
+    :return: None
+
+    Doctests not available.
+    """
     data = data
     depth = depth
     obj = obj
@@ -42,6 +52,11 @@ def menu(data, depth, obj):
 
 
 def display_items(data):
+    """
+    Function which displays keys in dicts/elements in list.
+    :param data: dict/list.
+    :return: None
+    """
     if type(data) == dict:
         for key in data.keys():
             print(f"\t • {key}")
@@ -51,6 +66,14 @@ def display_items(data):
 
 
 def get_info(data, depth, obj):
+    """
+    Gets value by given key and is also responsible
+    for changing objects.
+    :param data: current object in format of dict
+    :param depth: level
+    :param obj: name of current object
+    :return: None
+    """
     print(f"\tCURRENT DEPTH {depth}\nCURRENT OBJECT: {obj}\nOkay, input the key you want to get value of:\n")
     try:
         key = input()
@@ -92,6 +115,10 @@ def get_info(data, depth, obj):
 
 
 def main():
+    """
+    Main func which consists basically of the first loop of our program.
+    :return: None
+    """
     depth = 0
     file = open("twtdata.json", "r")
     _json = json.load(file)
