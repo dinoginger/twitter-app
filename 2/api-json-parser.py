@@ -8,9 +8,94 @@ endpoints.
 import json
 from time import sleep
 
-def main_menu(data):
+def menu(data, depth, object):
+    data = data
+    depth = depth
+    object = object
+    while True:
+        try:
+            print(f"!!!CURENT DEPTH : {depth}!!!\n!!!CURRENT OBJECT: {object}!!!")
+            print("\nWhat's next?\n"
+                  "\t1. Show me a list of all keys in JSON!\n"
+                  "\t2. Recieve data by given key.\n"
+                  "\t3. Exit\n"
+                  "Your choice: ")
+            choice = int(input())
+            if choice == 1:
+                print("\nHere is the list of all keys in this JSON object.")
+                display_all_keys(data)
+            elif choice == 2:
+                get_info(data, depth, object)
+            elif choice == 3:
+                return
+            else:
+                print("It's either 1, 2 or 3 :(")
+            sleep(1.25)
+            print("\nWhat's next?\n"
+                    "\t1. Show me a list of all keys in JSON!\n"
+                    "\t2. Recieve data by given key.\n"
+                  "\t3. Exit\n"
+                  "Your choice: ")
+        except ValueError:
+            print("It's either 1, 2 or 3 :(")
 
 
+def display_all_keys(data):
+    if type(data) == dict:
+        for key in data.keys():
+            print(f"\t • {key}")
+    elif type(data) == list:
+        for value in data:
+            print(f"\t • {value} ({type(value)})")
+
+
+def get_info(data, depth, object):
+    print(f"\tCURRENT DEPTH {depth}\nCURRENT OBJECT: {object}\nOkay, input the key you want to get value of:\n")
+    try:
+        key = input()
+    except KeyError:
+        print("Wrong key entered.")
+        return
+
+    if type(data[key]) == list:
+        print("Value is a list.")
+        if len(data[key]) == 0:
+            print("\t",data[key])
+
+        display_all_keys(data[key])
+        print("")
+
+    elif type(data[key]) == dict:
+        print("Value is an object.\nDo you want to see the list of its keys?\n"
+              "\t1. Yes\n"
+              "\t2. No\nYour choice:")
+        try:
+            choice = int(input())
+        except ValueError:
+            print("Wrong choice. Returning to menu...")
+            return
+
+        if choice == 1:
+            display_all_keys(data[key])
+            menu(data[key], depth+1, key)
+
+        elif choice == 2:
+            print("Returning to menu....")
+            return
+        else:
+            print("Wrong choice. Returning to menu...")
+            return
+    else:
+        print(f"Value by key \"{key}\":")
+        print(f"\t{data[key]}")
+
+
+def main():
+    depth = 0
+    file = open("twtdata.json", "r")
+    _json = json.load(file)
+    file.close()
+    data = _json["users"][0]
     print("Hello! I'm here because I know how to get you\n"
           "info you need from that json fast and safe.\n"
           "Just tell me what are you looking for and I'm gonna take care"
@@ -25,48 +110,21 @@ def main_menu(data):
             if choice == 1:
                 print("\nHere is the list of all keys in this JSON object.")
                 display_all_keys(data)
-                break
             elif choice == 2:
-                get_info(data)
+                get_info(data, depth, "main")
             elif choice == 3:
                 quit()
             else:
                 print("It's either 1, 2 or 3 :(")
             sleep(1.25)
             print("\nWhat's next?\n"
-                    "\t1. Show me a list of all keys in JSON!\n"
-                    "\t2. Recieve data by given key.\n"
+                  "\t1. Show me a list of all keys in JSON!\n"
+                  "\t2. Recieve data by given key.\n"
                   "\t3. Exit\n"
                   "Your choice: ")
         except ValueError:
             print("It's either 1, 2 or 3 :(")
 
 
-def display_all_keys(data):
-    for key in data:
-        print(f"\t • {key}")
-
-
-def get_info(data):
-    print("Okay, input the key you want to get value of:\n")
-    try:
-        key = input()
-    except KeyError:
-        print("Wrong key entered.")
-        return
-
-    if type(data[key]) == list:
-        pass
-    elif type(data[key]) == dict:
-        pass
-    else:
-        print(f"Value by key \"{key}\":")
-        print(f"\t{data[key]}")
-
-
-
 if __name__ == "__main__":
-    file = open("twtdata.json", "r")
-    _json = json.load(file)
-    file.close()
-    main_menu(_json["users"][0])  # we take only one json object.
+    main()
