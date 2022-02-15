@@ -8,13 +8,14 @@ endpoints.
 import json
 from time import sleep
 
-def menu(data, depth, object):
+
+def menu(data, depth, obj):
     data = data
     depth = depth
-    object = object
+    obj = obj
     while True:
         try:
-            print(f"!!!CURENT DEPTH : {depth}!!!\n!!!CURRENT OBJECT: {object}!!!")
+            print(f"!!!CURENT DEPTH : {depth}!!!\n!!!CURRENT OBJECT: {obj}!!!")
             print("\nWhat's next?\n"
                   "\t1. Show me a list of all keys in this object!!\n"
                   "\t2. Recieve data by given key.\n"
@@ -25,15 +26,15 @@ def menu(data, depth, object):
                 print("\nHere is the list of all keys in this JSON object.")
                 display_items(data)
             elif choice == 2:
-                get_info(data, depth, object)
+                get_info(data, depth, obj)
             elif choice == 3:
                 return
             else:
                 print("It's either 1, 2 or 3 :(")
             sleep(1.25)
             print("\nWhat's next?\n"
-                    "\t1. Show me a list of all keys in JSON!\n"
-                    "\t2. Recieve data by given key.\n"
+                  "\t1. Show me a list of all keys in JSON!\n"
+                  "\t2. Recieve data by given key.\n"
                   "\t3. Exit\n"
                   "Your choice: ")
         except ValueError:
@@ -49,16 +50,15 @@ def display_items(data):
             print(f"\t • {value} ({type(value)})")
 
 
-def get_info(data, depth, object):
-    print(f"\tCURRENT DEPTH {depth}\nCURRENT OBJECT: {object}\nOkay, input the key you want to get value of:\n")
+def get_info(data, depth, obj):
+    print(f"\tCURRENT DEPTH {depth}\nCURRENT OBJECT: {obj}\nOkay, input the key you want to get value of:\n")
     try:
         key = input()
-
 
         if type(data[key]) == list:
             print("Value is a list.")
             if len(data[key]) == 0:
-                print("\t",data[key])
+                print("\t", data[key])
 
             display_items(data[key])
             print("")
@@ -75,7 +75,7 @@ def get_info(data, depth, object):
 
             if choice == 1:
                 display_items(data[key])
-                menu(data[key], depth+1, key)
+                menu(data[key], depth + 1, key)
 
             elif choice == 2:
                 print("Returning to menu....")
