@@ -29,16 +29,25 @@ def create_map(followers, username, user_coordinates):
     mapp = folium.Map(zoom_start=15)
     locator2 = Nominatim(user_agent="for-city")
     locations = folium.FeatureGroup(name=f"{username}'s friends locations!")
-    # if type(user_coordinates) != str or type(user_coordinates) != None:
-    #     folium.CircleMarker(location=user_coordinates,
-    #                     radius=5, popup='I am here!',
-    #                     color='red', fill=True, fill_color='red').add_to(mapp)
+    if type(user_coordinates) != str or type(user_coordinates) != None:
+        # --- GET CITY
+        location2 = locator2.reverse(user_coordinates)
+        try:
+            address = location2.raw["address"]["city"]
+        except KeyError:  # if no city:
+            address = location2.raw["address"]["county"]
+        # ---
+        folium.CircleMarker(location=user_coordinates,
+                         radius=5, popup = f'''<b>{username} is here!</b><br>
+                                            {address}''',
+                         color='red', fill=True, fill_color='red').add_to(mapp)
     for person in followers:
         if person["coordinates"] is None:
             continue
         name = person["name"]
         location = person["coordinates"]
         print(location)
+
         # --- GET CITY
         location2 = locator2.reverse(person["coordinates"])
         try:
@@ -46,9 +55,11 @@ def create_map(followers, username, user_coordinates):
         except KeyError: # if no city:
             address = location2.raw["address"]["county"]
         # ---
+
         popup = f'''<b>{person["name"]}</b><br>
         {address}'''
         locations.add_child(folium.Marker(name=name, location=location, popup=popup))
+
     mapp.add_child(locations)
     print("Created map.")
     mapp.save("templates/map.html")
