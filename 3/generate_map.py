@@ -73,7 +73,3 @@ def get_percise_location(coordinates, locator):
     else:
         address = "----"
     return address
-
-
-if __name__ == "__main__":
-    main("dgtlbath")

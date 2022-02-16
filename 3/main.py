@@ -6,14 +6,11 @@ Simple web application which uses TwitterAPI
 and Leaflet.js to map given users' locations on map.
 """
 import fastapi
-import jinja2
 from fastapi.responses import HTMLResponse, RedirectResponse
-from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 import generate_map
 
 app = fastapi.FastAPI()
-app.mount("/static", StaticFiles(directory="static"), name="static")
 
 templates = Jinja2Templates(directory="templates")
 
@@ -30,15 +27,24 @@ def read_item(request: fastapi.Request):
 
 
 @app.post("/input")
-def get_item(request: fastapi.Request, username: str = fastapi.Form(...)):
+async def get_item(request: fastapi.Request, username: str = fastapi.Form(...)):
     # return templates.TemplateResponse('index.html', {'request': request, 'name': username})
     print({'request': request, 'name': username})
     generate_map.main(username)
-    response = RedirectResponse("/result")
-    response.status_code = 302 # to avoid " '405 methond not allowed' response"
+    response = RedirectResponse(f"/result?name={username}")
+    response.status_code = 302 # to avoid " '405 method not allowed' response"
     return response
 
 
-@app.get("/result", response_class=HTMLResponse)
-def show_result(request: fastapi.Request):
+@app.get("/map.html", response_class=HTMLResponse)
+async def show_result(request: fastapi.Request):
     return templates.TemplateResponse('map.html', {"request": request})
+
+
+@app.get("/result", response_class=HTMLResponse)
+async def show_result(request: fastapi.Request,name: str = "User", action: str="Default"):
+    if action == "Back":
+        return RedirectResponse("/input")
+    elif action == "Open in fullscreen":
+        return RedirectResponse("/map.html")
+    return templates.TemplateResponse('result.html', {"request": request, "name": name})
