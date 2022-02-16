@@ -32,7 +32,7 @@ async def get_item(request: fastapi.Request, username: str = fastapi.Form(...)):
     print({'request': request, 'name': username})
     generate_map.main(username)
     response = RedirectResponse(f"/result?name={username}")
-    response.status_code = 302 # to avoid " '405 method not allowed' response"
+    response.status_code = 302  # to avoid " '405 method not allowed' response"
     return response
 
 
@@ -42,7 +42,7 @@ async def show_result(request: fastapi.Request):
 
 
 @app.get("/result", response_class=HTMLResponse)
-async def show_result(request: fastapi.Request,name: str = "User", action: str="Default"):
+async def show_result(request: fastapi.Request, name: str = "User", action: str = "Default"):
     if action == "Back":
         return RedirectResponse("/input")
     elif action == "Open in fullscreen":

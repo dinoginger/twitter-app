@@ -1,10 +1,7 @@
 """
 Description later.
 """
-import time
-
-from locations import  get_locations
-import json
+from locations import get_locations
 import folium
 from geopy.geocoders import Nominatim
 
