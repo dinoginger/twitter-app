@@ -1,5 +1,6 @@
 """
-Description later.
+Script which is responsible for generating map,
+based on data recieved from TwitterAPI
 """
 from locations import get_locations
 import folium
@@ -7,6 +8,11 @@ from geopy.geocoders import Nominatim
 
 
 def main(username: str):
+    """
+    Main script here.
+    :param username: given on input username.
+    :return: None
+    """
     locator = Nominatim(user_agent="twitter-web-map")
     response, user_location = get_locations(username)
     followers = response["data"]
@@ -34,6 +40,15 @@ def main(username: str):
 
 
 def create_map(followers, username, user_coordinates, user_address):
+    """
+    For creating map.
+
+    :param followers: dict (deserialized json from TwitterAPI)
+    :param username: username given on input
+    :param user_coordinates: coordinates recieved after first TwitterAPI call.
+    :param user_address: retrieved by our additional function "get_percise_location()"
+    :return: None. Generates and saves html map into "/templates" folder
+    """
     mapp = folium.Map(zoom_start=15)
     locations = folium.FeatureGroup(name=f"{username}'s friends locations!")
     for person in followers:
@@ -62,6 +77,13 @@ def create_map(followers, username, user_coordinates, user_address):
 
 
 def get_percise_location(coordinates, locator):
+    """
+    Additional function. Uses geopy to get city/county by coordinates.
+
+    :param coordinates: tuple of floats. Latitude and longitude
+    :param locator: geolocator obj,
+    :return: string -> city/county
+    """
     location = locator.reverse(coordinates)
     if "city" in location.raw["address"]:
         address = location.raw["address"]["city"]

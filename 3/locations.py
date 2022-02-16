@@ -1,5 +1,5 @@
 """
-Add later
+Script for retrieving TwitterAPI data.
 """
 import hidden  # just a place with our twitter api keys.
 import requests
@@ -8,12 +8,15 @@ import requests
 def connect_to_endpoint(params, username):
     keys = hidden.oauth()
     bearer_oauth = {"Authorization": f"Bearer {keys['bearer']}"}
+
+    # Get user data (location and ID)
     response_usr = requests.get(f"https://api.twitter.com/2/users/by/username/{username}",
                                 headers=bearer_oauth, params={"user.fields": "location"})
     print(response_usr.json())
     id = response_usr.json()["data"]["id"]
     location = response_usr.json()["data"]["location"]
 
+    # Get followers data.
     url = f"https://api.twitter.com/2/users/{id}/followers"
     response = requests.get(url, headers=bearer_oauth, params=params)
     print(response.status_code)

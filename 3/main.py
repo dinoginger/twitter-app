@@ -4,6 +4,8 @@ Marko Ruzak CS-1
 
 Simple web application which uses TwitterAPI
 and Leaflet.js to map given users' locations on map.
+
+Main script.
 """
 import fastapi
 from fastapi.responses import HTMLResponse, RedirectResponse
