@@ -1,7 +1,6 @@
 """
 Add later
 """
-import json
 import hidden  # just a place with our twitter api keys.
 import requests
 
@@ -25,6 +24,6 @@ def connect_to_endpoint(params, username):
 
 
 def get_locations(username):
-    search_params = {"max_results": 3, "user.fields": "id,location"}
+    search_params = {"max_results": 100, "user.fields": "id,location"}
     json_response, user_location = connect_to_endpoint(search_params, username)
     return json_response, user_location
