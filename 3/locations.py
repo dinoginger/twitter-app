@@ -14,8 +14,10 @@ def connect_to_endpoint(params, username):
                                 headers=bearer_oauth, params={"user.fields": "location"})
     print(response_usr.json())
     id = response_usr.json()["data"]["id"]
-    location = response_usr.json()["data"]["location"]
-
+    if "location" in response_usr.json()["data"]:
+        location = response_usr.json()["data"]["location"]
+    else:
+        location = None
     # Get followers data.
     url = f"https://api.twitter.com/2/users/{id}/followers"
     response = requests.get(url, headers=bearer_oauth, params=params)
