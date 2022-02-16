@@ -6,14 +6,16 @@ Simple web application which uses TwitterAPI
 and Leaflet.js to map given users' locations on map.
 """
 import fastapi
+import jinja2
+from fastapi.responses import HTMLResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
-from fastapi.responses import HTMLResponse
 
 app = fastapi.FastAPI()
 app.mount("/static", StaticFiles(directory="static"), name="static")
 
-templates = Jinja2Templates(directory="./templates")
+templates = Jinja2Templates(directory="templates")
+
 
 @app.get("/")
 def something():
@@ -21,5 +23,12 @@ def something():
 
 
 @app.get('/index/{name}', response_class=HTMLResponse)
-async def read_item(request: fastapi.Request, name: str):
-    return templates.TemplateResponse('index.html', {'request': request, 'name': name})
+async def read_item(request: fastapi.Request):
+    return templates.TemplateResponse('index.html', {'request': request})
+
+
+@app.post("/index/{name}")
+async def get_item(request: fastapi.Request, username: str = fastapi.Form(...)):
+    # return templates.TemplateResponse('index.html', {'request': request, 'name': username})
+    print({'request': request, 'name': username})
+    return {username}
