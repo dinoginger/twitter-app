@@ -11,6 +11,7 @@ import fastapi
 from fastapi.responses import HTMLResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 import generate_map
+from geopy.exc import GeocoderTimedOut
 
 app = fastapi.FastAPI()
 
@@ -32,7 +33,12 @@ def read_item(request: fastapi.Request):
 async def get_item(request: fastapi.Request, username: str = fastapi.Form(...)):
     # return templates.TemplateResponse('index.html', {'request': request, 'name': username})
     print({'request': request, 'name': username})
-    generate_map.main(username)
+    try:
+        generate_map.main(username)
+    except GeocoderTimedOut:
+        return {"Geocode timeout:": " please try again later"}
+    except Exception as e:
+        return e.__repr__()
     response = RedirectResponse(f"/result?name={username}")
     response.status_code = 302  # to avoid " '405 method not allowed' response"
     return response

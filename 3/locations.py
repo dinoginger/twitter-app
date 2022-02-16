@@ -12,6 +12,8 @@ def connect_to_endpoint(params, username):
     # Get user data (location and ID)
     response_usr = requests.get(f"https://api.twitter.com/2/users/by/username/{username}",
                                 headers=bearer_oauth, params={"user.fields": "location"})
+    if response_usr.status_code != 200:
+        raise Exception(response_usr.status_code, "Invalid username.")
     print(response_usr.json())
     id = response_usr.json()["data"]["id"]
     if "location" in response_usr.json()["data"]:
